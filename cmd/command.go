@@ -85,6 +85,14 @@ func (app *App) Bind(cmd *cobra.Command) {
 }
 
 func (app *App) run(cmd *cobra.Command, args []string) {
+	http.HandleFunc("/healthz/live", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte("ok"))
+	})
+	http.HandleFunc("/healthz/ready", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte("ok"))
+	})
 	http.Handle("/metrics", Handler{
 		Exporters:            app.viper.GetStringSlice("urls"),
 		ExportersHTTPTimeout: app.viper.GetInt("exporterstimeout"),
